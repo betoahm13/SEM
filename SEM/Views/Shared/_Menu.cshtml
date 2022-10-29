@@ -1,0 +1,166 @@
+﻿@using Newtonsoft.Json
+@{
+    var Model = new List<NodoMenu>();
+    if (Context.Session.GetString("menu") != null)
+        Model = JsonConvert.DeserializeObject<List<NodoMenu>>(Context.Session.GetString("menu"));
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a href="#" class="navbar-brand font-weight-bold">SEM</a>
+        <button type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="navbarContent" class="collapse navbar-collapse">
+
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a href="@Url.Action("Index", "Home")" class="nav-link"><i class="fas fa-home"></i>&nbsp;Inicio</a></li>
+                @{
+                    if (Model != null && !string.IsNullOrWhiteSpace(Context.Session.GetString("userLogged")))
+                    {
+                        var lstNodosPadre = Model.Where(n => n.IdNodoPadre == 0).ToList();
+
+                        foreach (var nodoPadre in lstNodosPadre)
+                        {
+                            <li class="nav-item dropdown">
+                                <a id="dropdownMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">&nbsp;@nodoPadre.Nombre</a>
+                                <ul aria-labelledby="dropdownMenu1" class="dropdown-menu border-0 shadow">
+
+                                    @{
+                                        var lstNodos1erNivel = Model.Where(n => n.IdNodoPadre == nodoPadre.Id).ToList();
+
+                                        foreach (var nodo1erNivel in lstNodos1erNivel)
+                                        {
+                                            if (Model.Any(n => n.IdNodoPadre == nodo1erNivel.Id))
+                                            {
+                                                <li class="dropdown-submenu">
+                                                    <a id="dropdownMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle @nodo1erNivel.Color">&nbsp;@nodo1erNivel.Nombre</a>
+                                                    <ul aria-labelledby="dropdownMenu2" class="dropdown-menu border-0 shadow">
+                                                        @{
+                                                            var lstNodos2doNivel = Model.Where(n => n.IdNodoPadre == nodo1erNivel.Id).ToList();
+
+                                                            foreach (var nodo2doNivel in lstNodos2doNivel)
+                                                            {
+                                                                if (Model.Any(n => n.IdNodoPadre == nodo2doNivel.Id))
+                                                                {
+                                                                    <li class="dropdown-submenu">
+                                                                        <a id="dropdownMenu3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle @nodo2doNivel.Color">&nbsp;@nodo2doNivel.Nombre</a>
+                                                                        <ul aria-labelledby="dropdownMenu3" class="dropdown-menu border-0 shadow">
+                                                                            @{
+                                                                                var lstNodos3erNivel = Model.Where(n => n.IdNodoPadre == nodo2doNivel.Id).ToList();
+
+                                                                                foreach (var nodo3erNivel in lstNodos3erNivel)
+                                                                                {
+                                                                                    if (Model.Any(n => n.IdNodoPadre == nodo3erNivel.Id))
+                                                                                    {
+                                                                                        <li class="dropdown-submenu">
+                                                                                            <a id="dropdownMenu4" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle @nodo3erNivel.Color">&nbsp;@nodo3erNivel.Nombre</a>
+                                                                                            <ul aria-labelledby="dropdownMenu3" class="dropdown-menu border-0 shadow">
+                                                                                                @{
+                                                                                                    var lstNodos4toNivel = Model.Where(n => n.IdNodoPadre == nodo3erNivel.Id).ToList();
+
+                                                                                                    foreach (var nodo4toNivel in lstNodos4toNivel)
+                                                                                                    {
+                                                                                                        if (Model.Any(n => n.IdNodoPadre == nodo4toNivel.Id))
+                                                                                                        {
+                                                                                                            <li class="dropdown-submenu">
+                                                                                                                <a id="dropdownMenu5" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle @nodo4toNivel.Color">&nbsp;@nodo4toNivel.Nombre</a>
+                                                                                                                <ul>
+                                                                                                                </ul>
+                                                                                                            </li>
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            <li class="nav-item"><a href="@Url.Action(nodo4toNivel.ActionName, nodo4toNivel.ControllerName, new { par = nodo4toNivel.Par })" class="dropdown-item @nodo4toNivel.Color">&nbsp;@nodo4toNivel.Nombre</a></li>
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            </ul>
+                                                                                        </li>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <li class="nav-item"><a href="@Url.Action(nodo3erNivel.ActionName, nodo3erNivel.ControllerName, new { par = nodo3erNivel.Par })" class="dropdown-item @nodo3erNivel.Color">&nbsp;@nodo3erNivel.Nombre</a></li>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </ul>
+                                                                    </li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <li class="nav-item"><a href="@Url.Action(nodo2doNivel.ActionName, nodo2doNivel.ControllerName, new { par = nodo2doNivel.Par })" class="dropdown-item @nodo2doNivel.Color">&nbsp;@nodo2doNivel.Nombre</a></li>
+                                                                }
+                                                            }
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="nav-item"><a href="@Url.Action(nodo1erNivel.ActionName, nodo1erNivel.ControllerName, new { par = nodo1erNivel.Par })" class="dropdown-item @nodo1erNivel.Color">&nbsp;@nodo1erNivel.Nombre</a></li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+
+                        <li class="nav-item dropdown">
+                            <a id="dropdownMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">&nbsp;Ayuda</a>
+                            <ul aria-labelledby="dropdownMenu1" class="dropdown-menu border-0 shadow">
+                                <li class="nav-item"><a href="#" class="dropdown-item">&nbsp;Manual de usuario</a></li>
+                                <li class="nav-item"><span class="dropdown-item" onclick="$('#helpModal').modal('show')">&nbsp;Ayuda</span></li>
+                            </ul>
+                        </li>
+                    }
+
+                }
+
+            </ul>
+
+            <ul class="navbar-nav">
+
+                @{
+                    if (!string.IsNullOrWhiteSpace(Context.Session.GetString("userLogged")))
+                    {
+                        //string userName = ((UsuarioModel)Session["userLogged"]).Nombre;
+                        string userName = JsonConvert.DeserializeObject<UsuarioModel>(Context.Session.GetString("userLogged")).Usuario;
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user"></i>&nbsp;@userName
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border:none !important; text-align:center;">
+                                <a href="#" id="btnMC" style="text-decoration:none; color:red">
+                                    <span style="color:black;"><i class="fas fa-cog"></i>&nbsp;Mi cuenta</span>
+                                </a>
+                                <br />
+                                <a href="#" id="btnCS" style="text-decoration:none; color:red">
+                                    <i class="fas fa-sign-out-alt"></i>&nbsp;Cerrar sesión
+                                </a>
+                            </div>
+                        </li>
+                    }
+                }
+
+                <li class="nav-item">
+
+                    @{
+                        if (string.IsNullOrWhiteSpace(Context.Session.GetString("userLogged")))
+                        {
+                            <a class="nav-link" href="#"></a>
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">
+                                <i class="fas fa-sign-in-alt"></i>&nbsp;Iniciar sesión
+                            </button>
+                        }
+                    }
+
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+</nav>

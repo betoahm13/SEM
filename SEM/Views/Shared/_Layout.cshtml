@@ -1,35 +1,49 @@
-﻿<!DOCTYPE html>
+﻿@using Newtonsoft.Json
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SEM</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <link href="~/css/navbar.css?v=@DateTime.Now.ToString("yyyyMMdd")" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+
+    @*Para que sea una tabla responsiva*@
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.2.7/css/rowReorder.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.dataTables.min.css">
+
+    @*Para seleccionar rows de un datatable*@
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
+
+    @*Para mostrar botones de datatable*@
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
+
+    @*Para el daterangepicker*@
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    @*Para los Bootstrap Switch Button*@
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
+
+
     <link rel="stylesheet" href="~/SEM.styles.css" asp-append-version="true" />
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SEM</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    
+    @*-------------------------Menu dinamico------------------------------*@
+    <div id="divMenu">
+        @Html.Partial("_Menu")
+    </div>
+    @*-------------------------Menu dinamico------------------------------*@
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -38,12 +52,297 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - SEM - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - SEM
+
+            @{
+                UsuarioModel u = new UsuarioModel();
+
+                try
+                {
+                    if (!string.IsNullOrWhiteSpace(Context.Session.GetString("userLogged")))
+                    {
+                        u = JsonConvert.DeserializeObject<UsuarioModel>(Context.Session.GetString("userLogged"));
+                        <span>@u.Usuario</span>
+                    }
+
+
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://kit.fontawesome.com/f8ade89bb2.js" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+    @*Para que sea una tabla responsiva*@
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+
+    @*Para seleccionar rows de un datatable*@
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+
+    @*Para mostrar botones de datatable*@
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    @*Para el daterangepicker*@
+    @*<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>*@
+    <script type="text/javascript" src="https://momentjs.com/downloads/moment.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    @*<script src="~/Scripts/HoldOn.min.js"></script>*@
+
+    @*Para los Bootstrap Switch Button*@
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
+
+    
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+
+        //--------------------------------------------------jquery functions
+        $("#btnMC").on("click", function () {
+            $('#miCuentaModal').modal('show');
+        });
+
+        $("#btnCS").on("click", function () {
+            lo();
+        });
+
+        $('.sel2').select2({
+            placeholder: "Seleccione una opción",
+            allowClear: true
+        });
+
+        $('.sel2').change(function () {
+            $(".sel2 option[value='']").each(function () {
+                $(this).remove().trigger('change');
+            });
+        });
+
+        $(function () {
+            // ------------------------------------------------------- //
+            // Multi Level dropdowns
+            // ------------------------------------------------------ //
+            $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+                $(this).siblings().toggleClass("show");
+
+
+                if (!$(this).next().hasClass('show')) {
+                    $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+                }
+                $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
+                    $('.dropdown-submenu .show').removeClass("show");
+                });
+
+            });
+        });
+
+        //--------------------------------------------------js functions
+
+        function lo() {
+            fetch('../Login/LO', {
+                method: 'POST'
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        throw "Error en la llamada";
+                    }
+                })
+                .then(function (r) {
+                    document.location.href = "/";
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        function CheckSession() {
+            fetch('../Login/CheckSession', {
+                method: 'POST'
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        throw "Error en la llamada";
+                    }
+                })
+                .then(function (r) {
+
+                    if (r == false)
+                        lo();
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        document.addEventListener("click", function () {
+
+            reiniciaContador();
+
+        });
+
+        document.addEventListener("keydown", function () {
+
+            reiniciaContador();
+
+        });
+
+        var intTO;
+
+        function startTimer(duration, display) {
+
+            var timer = duration, minutes, seconds;
+
+            if (intTO)
+                clearInterval(intTO);
+
+            intTO = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (display.textContent == "00:00") {
+                    lo();
+                }
+
+                if (display.textContent == "05:00") {
+                    //document.querySelector('#divTime').style.display = "inline";
+                }
+
+                if (seconds % 20 == 0) {
+                    CheckSession();
+                }
+
+                if (--timer < 0) {
+                    timer = duration;
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            reiniciaContador();
+        };
+
+        function reiniciaContador() {
+
+            //document.querySelector('#divTime').style.display = "none";
+
+            let mnts = 60 * 30,
+                display = document.querySelector('#time');
+
+            if (display)
+                startTimer(mnts, display);
+        }
+
+        //document.getElementById("btnGuardaInfoPersonal").addEventListener("click", (e) => {
+
+        //    GuardaInfoPersonal();
+
+        //});
+
+        function GuardaInfoPersonal() {
+
+            let p = {
+                Usuario: txtUser.value,
+                Emails: userEmail.value,
+                Telefonos: numberUser.value,
+                Color: txtColor.value,
+            }
+            if (userEmail.value.length > 0 && numberUser.value.length > 0) {
+
+                fetch('../Home/InsertInfoPersonal', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(p)
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        else {
+                            throw "Error en la llamada";
+                        }
+                    })
+                    .then(function (response) {
+                        try {
+                            let data = JSON.parse(response);
+                            console.log(data);
+                            if (data[0].result == "ok") {
+
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: "Datos actualizados",
+                                    text: '',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+
+                            }
+
+                        } catch (e) {
+                            console.log(e.message);
+                        }
+
+                        $('#modalLoteInfo').modal('hide');
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            } else {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: "Por favor llenar todos los datos",
+                    text: '',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+
+        }
+
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

@@ -2,7 +2,47 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@*<div class="text-center">
+    <h1 class="display-4">Bienvenido</h1>
+</div>*@
+
+<br>
+
+<div class="row">
+    <div class="col-12">
+        <div id="divBase">
+
+        </div>
+    </div>
 </div>
+
+@section scripts{
+
+    <script>
+
+        let data = new FormData();
+
+        fetch('Home/SelectBase', {
+            method: 'POST',
+            body: data
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    return response.json();
+                }
+                else {
+                    throw "Error en la llamada";
+                }
+            })
+            .then(function (r) {
+
+                tableConstructor(JSON.parse(r),"tblBase","divBase",true);
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    </script>
+
+}
