@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string ApPat { get; set; }
+        public string ApMat { get; set; }
         public string Usuario { get; set; }
         public string Emails { get; set; }
         public string Telefonos { get; set; }

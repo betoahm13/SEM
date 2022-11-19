@@ -21,6 +21,18 @@ namespace SEM.Controllers
 
         public IActionResult Index()
         {
+            /////////////////////////////////Para pruebas
+            //u = new UsuarioModel
+            //{
+            //    Id = 1,
+            //    Usuario = "albertoh",
+            //    Nombre = "Alberto",
+            //    ApPat = "Hernández",
+            //    Validado = true
+            //};
+
+            HttpContext.Session.SetString("userLogged", JsonConvert.SerializeObject(u));
+
             if (string.IsNullOrWhiteSpace(HttpContext.Session.GetString("userLogged")))
                 return RedirectToAction("Index", "Login");
             else
@@ -36,25 +48,12 @@ namespace SEM.Controllers
 
                 return View();
             }
-
-
-            /////////////////////////////////Para pruebas
-
-            //u = new UsuarioModel();
-            //u.Id = 1;
-            //u.Usuario = "albertoh";
-            //u.Nombre = "Alberto";
-            //u.ApPat = "Hernández";
-            //u.Validado = true;
-
-            //HttpContext.Session.SetString("userLogged", JsonConvert.SerializeObject(u));
-
-            return View();
         }
 
         public IActionResult SelectBase()
         {
-            return Json(bl.SelectBase());
+            //return Json(bl.SelectBase());
+            return Json("");
         }
 
         public IActionResult Privacy()

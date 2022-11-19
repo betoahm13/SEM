@@ -1,0 +1,84 @@
+﻿@using Newtonsoft.Json
+@{
+    var Model = new List<NodoMenu>();
+    if (Context.Session.GetString("menu") != null)
+        Model = JsonConvert.DeserializeObject<List<NodoMenu>>(Context.Session.GetString("menu"));
+}
+
+<main class="d-flex flex-nowrap">
+
+    <div class="flex-shrink-0 p-3 bg-white" style="width: 13rem;">
+        <a href="" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+            <span>SEM</span>
+        </a>
+
+        <ul class="list-unstyled ps-0">
+
+            @{
+                if (Model != null && !string.IsNullOrWhiteSpace(Context.Session.GetString("userLogged")))
+                {
+                    var lstNodosPadre = Model.Where(n => n.IdNodoPadre == 0).ToList();
+
+                    foreach (var nodoPadre in lstNodosPadre)
+                    {
+                        <li class="mb-1">
+                            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#nodoPadre-@nodoPadre.Id-collapse" aria-expanded="false">
+                                @nodoPadre.Nombre
+                            </button>
+                            <div class="collapse" id="nodoPadre-@nodoPadre.Id-collapse">
+                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    @{
+                                        var lstNodos1erNivel = Model.Where(n => n.IdNodoPadre == nodoPadre.Id).ToList();
+                                        foreach (var nodo1erNivel in lstNodos1erNivel)
+                                        {
+                                            if (Model.Any(n => n.IdNodoPadre == nodo1erNivel.Id))
+                                            {
+                                                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">@nodo1erNivel.Nombre</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li class="nav-item"><a href="@Url.Action(nodo1erNivel.ActionName, nodo1erNivel.ControllerName, new { par = nodo1erNivel.Par })" class="dropdown-item @nodo1erNivel.Color">&nbsp;@nodo1erNivel.Nombre</a></li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+                    }
+                }
+            }
+
+            <li class="border-top my-3"></li>
+
+            <li class="mb-1">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                    Cuenta
+                </button>
+                <div class="collapse" id="account-collapse">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Perfil</a></li>
+                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Configuración</a></li>
+                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="b-example-divider b-example-vr"></div>
+
+</main>
+
+@section Scripts{
+    <script>
+        /* global bootstrap: false */
+        (() => {
+            'use strict'
+            const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            tooltipTriggerList.forEach(tooltipTriggerEl => {
+                new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        })()
+    </script>
+}
